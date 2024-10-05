@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Объявления</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/css/bootstrap.min.css">
+    <style>
+        .custom-nav {
+            background-color: #7e2d2d;
+        }
+        body {
+            background-color: #faf7ef; 
+            color: #000000; 
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-light custom-nav">
+        <div class="container">
+            <!-- Название сайта -->
+            <a class="navbar-brand" href="/posts"><b>RPG-LIFE</b></a>
+
+            <!-- Основное меню -->
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/responses/"><b>Отклики</b></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#"><b>Новости игры</b></a>
+                    </li>
+                </ul>
+                
+                <!-- Кнопки входа и регистрации -->
+                <ul class="navbar-nav ms-auto">
+                    {% if user.is_authenticated %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="#"><b>Привет, {{ user.username }}</b></a>
+                        </li>
+                        <form method="post" action="{% url 'account_logout' %}">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-outline-danger">Выйти</button>
+                        </form>     
+                    {% else %}
+                        <form method="post" action="{% url 'account_login' %}">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-outline-success ms-2">Войти</button>
+                        </form>
+                        <form method="post" action="{% url 'account_signup' %}">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-outline-primary ms-2">Регистрация</button>
+                        </form>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Content Block -->
+    <div class="container">
+        {% block content %}
+        {% endblock content %}
+    </div>
+
+    <!-- Bootstrap JS (опционально) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

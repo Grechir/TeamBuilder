@@ -1,0 +1,79 @@
+{% extends 'flatpages/default.html' %}
+
+{% block content %}
+    <h1 class="text-center my-4">Все объявления</h1>
+    <style>
+        .banner-container {
+            margin-top: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+        }
+        .banner {
+            padding: 15px;
+            margin: 15px 0;
+            width: 350px;
+            height: 430px;
+            border: 1px solid #ddd;
+            justify-content: space-between;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s;
+        }
+        .banner:hover {
+            transform: scale(1.02);
+        }
+        .banner-title {
+            font-size: 24px;
+            font-weight: bold;
+            height: 70px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .banner-content {
+            margin-top: 10px;
+            font-size: 16px;
+            height: 275px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .banner-content img, .banner-content iframe {
+            max-width: 100%;
+            height: auto; 
+        }
+        .banner-footer {
+            margin-top: 15px;
+            font-size: 12px;
+            align-self: end;
+            color: #6c757d;
+        }
+        .banner-title a {
+            color: #000000;
+            text-decoration: none;
+        }
+        .banner-title a:hover {
+            color: #c70039;
+            text-decoration: underline;  
+        }
+    </style>
+
+    <div class="banner-container">
+        {% for post in posts %}
+        <div class="banner">
+            <div class="banner-title">
+                <a href="{% url 'post-detail' post.id %}" class="text-decoration-none">{{ post.title }}</a>
+            </div>
+            <div class="banner-content">
+                {{ post.content|safe|truncatechars:2056 }} 
+            </div>
+            <div class="banner-footer">
+                <span>Автор: {{ post.author.name }}</span> |
+                <span>Категория: {{ post.get_category_display }}</span> |
+                <span>Дата создания: {{ post.created_at }}</span>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+{% endblock content %}
