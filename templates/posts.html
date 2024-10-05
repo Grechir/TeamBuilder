@@ -1,5 +1,7 @@
 {% extends 'flatpages/default.html' %}
 
+{% load custom_tags %}
+
 {% block content %}
     <h1 class="text-center my-4">Все объявления</h1>
     <style>
@@ -58,7 +60,33 @@
             text-decoration: underline;  
         }
     </style>
+        
+        {# Кнопка создания нового объявления #}
+        {% if user.is_authenticated %}
+                <h2 class="text-center my-4">
+                    <a href="{% url 'post-create' %}" class="btn-custom">Новое объявление</a>
+                </h2>
+        {% endif %}
 
+        <style>
+            .btn-custom {
+                display: inline-block;
+                padding: 10px 20px;
+                font-size: 18px;
+                text-decoration: none;
+                background-color: #007bff;
+                color: white;
+                border-radius: 5px;
+                transition: transform 0.3s, background-color 0.3s;
+            }
+            .btn-custom:hover {
+                background-color: #0056b3;
+                transform: scale(1.02);
+                color: white;
+            }
+        </style>
+
+    {# Отображение баннеров #}
     <div class="banner-container">
         {% for post in posts %}
         <div class="banner">
@@ -76,4 +104,26 @@
         </div>
         {% endfor %}
     </div>
+    
+    
+    {# Пагинация #}
+    {% if page_obj.has_previous %}
+       {# Для каждой ссылки пагинации указываем обработку через новый тег #}
+       <a href="?{% url_replace page=1 %}">1</a>
+       {% if page_obj.previous_page_number != 1 %}
+           ...
+           <a href="?{% url_replace page=page_obj.previous_page_number %}">{{ page_obj.previous_page_number }}</a>
+       {% endif %}
+   {% endif %}
+
+   {{ page_obj.number }}
+
+   {% if page_obj.has_next %}
+       <a href="?{% url_replace page=page_obj.next_page_number %}">{{ page_obj.next_page_number }}</a>
+       {% if paginator.num_pages != page_obj.next_page_number %}
+           ...
+           <a href="?{% url_replace page=page_obj.paginator.num_pages %}">{{ page_obj.paginator.num_pages }}</a>
+       {% endif %}
+   {% endif %}
+    
 {% endblock content %}

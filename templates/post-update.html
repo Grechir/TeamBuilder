@@ -3,9 +3,15 @@
 {% block content %}
 <h1>Публикация</h1>
 <hr>
-<form action="" method="post">  <!-- Здесь post - это не название модели, это пост запрос-->
+<form action="" method="post" enctype="multipart/form-data" novalidate> 
+    <!-- Здесь post - это не название модели, это пост запрос.
+    В дополнение к этому, ВАЖНО:
+    строчка enctype="multipart/form-data" novalidate отключает встроенную HTML5-валидацию для всей формы.
+    Если этого не сделать, то пост сохраняться не будет!-->
+    
     {% csrf_token %}
+    {{ form.media }}  <!-- для работы CKEditor_5 -->
     {{ form.as_p }}
-    <input type="submit" value="Save" />
+    <input type="submit" value="Save"/>
 </form>
 {% endblock content %}

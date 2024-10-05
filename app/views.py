@@ -1,16 +1,16 @@
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, reverse
 from django.views.generic import ListView, DetailView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 
-from app.models import Post, UserResponse
-
+from app.models import Post, UserResponse, Author
 
 class PostList(ListView):
     model = Post
     ordering = '-created_at'
     template_name = 'posts.html'
     context_object_name = 'posts'
-    paginate_by = 5
+    paginate_by = 30
 
 
 class PostDetail(DetailView):
@@ -19,22 +19,33 @@ class PostDetail(DetailView):
     context_object_name = 'post'
 
 
-class PostCreate(CreateView):
+class PostCreate(LoginRequiredMixin, CreateView):
     model = Post
     template_name = 'post-update.html'
+
     fields = [
         'title',
         'content',
-        'category'
+        'category',
     ]
-    success_url = reverse_lazy('post')
 
     def form_valid(self, form):
-        form.instance.author = self.request.user.author
+        # Проверяем, есть ли у пользователя связанный объект `Author`
+        user = self.request.user
+        if not hasattr(user, 'author'):
+            author = Author.objects.create(user=user, name=user.username)
+        else:
+            author = user.author
+
+        # Присваиваем созданного или существующего автора посту
+        form.instance.author = author
         return super().form_valid(form)
 
+    def get_success_url(self):
+        return reverse('post-detail', kwargs={'pk': self.object.pk})
 
-class PostUpdate(UpdateView):
+
+class PostUpdate(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Post
     template_name = 'post-update.html'
     fields = [
@@ -42,21 +53,23 @@ class PostUpdate(UpdateView):
         'content',
         'category'
     ]
-    success_url = reverse_lazy('post')
 
-    def author_identify(self):
+    def test_func(self):
         post = self.get_object()
-        return post.request.user.author == post.author
+        return self.request.user == post.author.user
+
+    def get_success_url(self):
+        return reverse('post-detail', kwargs={'pk': self.object.pk})
 
 
-class PostDelete(DeleteView):
+class PostDelete(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = Post
     template_name = 'post-delete.html'
+    success_url = reverse_lazy('post-list')
 
-    def author_identify(self):
+    def test_func(self):
         post = self.get_object()
-        return post.request.user.author == post.author
-
+        return self.request.user == post.author.user
 
 class ResponseList(DetailView):
     model = UserResponse

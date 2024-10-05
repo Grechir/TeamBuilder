@@ -1,11 +1,12 @@
 {% extends 'flatpages/default.html' %}
 
 {% block content %}
-<h1>Удаление публикации</h1>
+<h1>Удаление объявления</h1>
 <hr>
 <form action="" method="post">  <!-- Здесь post - это не название модели, это пост запрос-->
     {% csrf_token %}
-    <p>Удаляем выбранную публикацию?</p>
-    <input type="submit" value="Delete" />
+    <p>Вы действительно хотите удалить это объявление?</p>
+    <input type="submit" value="Удалить" />
+    <button type="button" onclick="window.history.back()">Отмена</button>
 </form>
 {% endblock content %}
