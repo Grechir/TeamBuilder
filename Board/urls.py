@@ -19,13 +19,18 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 
+from app.custom_views import custom_upload_file  # добавляем измененную функцию
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('posts/', include('app.urls')),
+    path('responses/', include('app.urls_responses')),
+    path('ckeditor/image_upload/', custom_upload_file, name='ckeditor_image_upload'),  # вставляем перед ckeditor
     path('ckeditor/', include('django_ckeditor_5.urls')),
     path('accounts/', include('allauth.urls')),
 
 ]
 
 if settings.DEBUG:
+    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

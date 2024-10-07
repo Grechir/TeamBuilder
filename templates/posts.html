@@ -62,11 +62,11 @@
     </style>
         
         {# Кнопка создания нового объявления #}
-        {% if user.is_authenticated %}
+            {% if user.is_authenticated %}
                 <h2 class="text-center my-4">
                     <a href="{% url 'post-create' %}" class="btn-custom">Новое объявление</a>
                 </h2>
-        {% endif %}
+            {% endif %}
 
         <style>
             .btn-custom {
@@ -94,12 +94,13 @@
                 <a href="{% url 'post-detail' post.id %}" class="text-decoration-none">{{ post.title }}</a>
             </div>
             <div class="banner-content">
-                {{ post.content|safe|truncatechars:2056 }} 
+                {{ post.clean_content|safe|truncatechars:2056 }} 
+                {# контент заранее отфильтрован, отключаем последующую экранизацию #} 
             </div>
             <div class="banner-footer">
                 <span>Автор: {{ post.author.name }}</span> |
                 <span>Категория: {{ post.get_category_display }}</span> |
-                <span>Дата создания: {{ post.created_at }}</span>
+                <span>Дата создания: {{ post.created_at|date:"d.m.Y / H:i" }}</span>
             </div>
         </div>
         {% endfor %}

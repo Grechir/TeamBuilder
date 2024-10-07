@@ -1,3 +1,4 @@
+import django_ckeditor_5.views
 from django.urls import reverse_lazy, reverse
 from django.views.generic import ListView, DetailView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
@@ -5,6 +6,8 @@ from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 
 from app.models import Post, UserResponse, Author
 
+
+# ------------------------- Posts -------------------------
 class PostList(ListView):
     model = Post
     ordering = '-created_at'
@@ -71,18 +74,16 @@ class PostDelete(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
         post = self.get_object()
         return self.request.user == post.author.user
 
-class ResponseList(DetailView):
+
+# ----------------------- Responses -----------------------
+class ResponseList(ListView):
     model = UserResponse
-    template_name = 'response-list.html'
+    template_name = 'responses.html'
     context_object_name = 'responses'
 
 
-class ResponseCreate(CreateView):
+class ResponseDetail(DetailView):
     model = UserResponse
     template_name = 'response-create.html'
     context_object_name = 'response'
     success_url = reverse_lazy('posts')
-
-
-
-

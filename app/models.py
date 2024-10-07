@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django_ckeditor_5.fields import CKEditor5Field
+import bleach
 
 
 class User(AbstractUser):
@@ -37,8 +38,23 @@ class Post(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     category = models.CharField(max_length=16, choices=TYPE, default='quest')
 
-    def __str__(self):
-        return self.title
+    # Метод для безопасной фильтрации HTML-контента
+    def clean_content(self):
+        allowed_tags = [
+            'p', 'b', 'i', 'u', 'em', 'strong', 'a', 'ul', 'ol', 'li',
+            'blockquote', 'img', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6',
+            'table', 'thead', 'tbody', 'tr', 'th', 'td', 'figure',
+            'div', 'br', 'iframe'
+        ]
+        allowed_attributes = {
+            'a': ['href', 'title', 'target'],
+            'img': ['src', 'alt', 'style'],
+            'figure': ['style'],
+            'div': ['data-oembed-url', 'style'],
+            'p': ['style'],
+            'iframe': ['src', 'style', 'frameborder', 'allow', 'allowfullscreen']
+        }
+        return bleach.clean(self.content, tags=allowed_tags, attributes=allowed_attributes, strip=False)
 
 
 class UserResponse(models.Model):

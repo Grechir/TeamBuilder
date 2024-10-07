@@ -3,7 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Объявления</title>
+    <title>
+        {% if '/posts/' in request.path %}
+            Объявления
+        {% elif '/responses/' in request.path %}
+            Отклики
+        {% elif '/news/' in request.path %}  {# Будет реализовано позже #}
+            Новости игры
+        {% else %}
+            Сайт
+        {% endif %}
+    </title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/css/bootstrap.min.css">
     <style>
         .custom-nav {
@@ -26,7 +36,7 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item">
-                        <a class="nav-link" href="/responses/"><b>Отклики</b></a>
+                        <a class="nav-link" href="/responses"><b>Отклики</b></a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="#"><b>Новости игры</b></a>

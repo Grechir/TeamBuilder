@@ -1,6 +1,5 @@
 from django.urls import path
-from .views import (PostList, PostDetail, PostCreate, PostUpdate,
-                    PostDelete, ResponseList, ResponseCreate)
+from .views import (PostList, PostDetail, PostCreate, PostUpdate, PostDelete)
 from accounts.views import ConfirmUser
 
 urlpatterns = [
@@ -9,7 +8,5 @@ urlpatterns = [
     path('create/', PostCreate.as_view(), name='post-create'),
     path('<int:pk>/update/', PostUpdate.as_view(), name='post-update'),
     path('<int:pk>/delete/', PostDelete.as_view(), name='post-delete'),
-    path('responses/', ResponseList.as_view(), name='response-list'),
-    path('responses/<int:pk>/', ResponseCreate.as_view(), name='response-create'),
     path('confirm/', ConfirmUser.as_view(), name='confirm_user'),
 ]
