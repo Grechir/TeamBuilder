@@ -1,0 +1,19 @@
+{% extends 'flatpages/default.html' %}
+{% block content %}
+    <h2>Отклик на: {{ response.post.title }}</h2>
+    <p>{{ response.text }}</p>
+    <p>Автор отклика: {{ response.author.username }}</p>
+    <p>Статус: {{ response.get_status_display }}</p>
+
+    <form method="post">
+        {% csrf_token %}
+            {% if request.user != response.author and response.status == 'pending'%}
+                <button type="submit" name="accept" class="btn btn-success">Принять</button>
+                <button type="submit" name="reject" class="btn btn-danger">Отклонить</button>
+            {% elif response.status == 'rejected' %}
+                <a href="{% url 'response-delete' response.pk %}" class="btn btn-danger">Удалить</a>
+            {% endif %}
+    </form>
+    <br><button onclick="history.back()" class="btn btn-secondary">Назад к списку</button>
+{% endblock %}
+

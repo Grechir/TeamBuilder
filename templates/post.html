@@ -18,6 +18,11 @@ Post
             
                 <a href="{% url 'post-delete' post.pk %}" class="btn-custom">Удалить</a>
         </h2>
+    {% else %}
+        <h3
+            class="text-center my-4">
+                <a href="{% url 'response-create' post_id=post.id %}" class="btn-custom">Откликнуться</a>
+        </h3>
     {% endif %}
     
 {% endblock content %}

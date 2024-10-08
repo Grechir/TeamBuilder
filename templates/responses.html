@@ -1,2 +1,111 @@
 {% extends 'flatpages/default.html' %}
 
+{% block content %}
+    <h2>Поиск</h2>
+    
+    <style>
+        {# Настройка баннера #}
+        .banner-container {
+            margin-top: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+        }
+        .banner {
+            padding: 15px;
+            margin: 10px 0;
+            width: 600px;
+            height: 158px;
+            border: 1px solid #ddd;
+            justify-content: space-between;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s;
+        }
+        .banner:hover {
+            transform: scale(1.02);
+        }
+        
+        {# Статусы #}
+        .status-pending {
+            background-color: #f9f9f9;
+        }
+        .status-accepted {
+            background-color: #bbeabb;
+        }
+        .status-rejected {
+            background-color: #e1a9a9;
+        }
+        
+        {# Заголовок #}
+        .banner-title {
+            font-size: 17px;
+            font-weight: bold;
+            height: 22px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .banner-title a {
+            color: #000000;
+            text-decoration: none;
+        }
+        .banner-title a:hover {
+            color: #c70039;
+            text-decoration: underline;  
+        }
+        
+        {# Контент #}
+        .banner-content {
+            margin-top: 10px;
+            font-size: 16px;
+            height: 70px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .banner-footer {
+            margin-top: 5px;
+            font-size: 12px;
+            align-self: end;
+            color: #6c757d;
+        }
+    </style>
+    
+    <!-- Форма поиска -->
+    <form method="get">
+        {{ form.as_p }}  <!-- Выводим форму поиска -->
+        <button type="submit" class="btn btn-primary">Поиск</button>
+    </form>
+    
+    <!-- Отклики -->
+    <div style="text-align: center;">
+        <h1>Все отклики</h1>
+    </div>
+    <div class="banner-container">
+        {% for response in responses %}
+            <div class="banner 
+                {% if response.status == 'pending' %}status-pending
+                {% elif response.status == 'accepted' %}status-accepted
+                {% elif response.status == 'rejected' %}status-rejected
+                {% endif %}">
+                
+                    <div class="banner-title">
+                        <a href="{% url 'response-detail' response.id %}" class="text-decoration-none">
+                            Отклик на: {{ response.post.title|truncatechars:50 }}</a>
+                    </div>
+                    <div class="banner-content">
+                        Текст: {{ response.text|truncatechars:60 }}<br>
+                        Автор отклика: {{ response.author.username }}<br>
+                        Статус: <b>{{ response.get_status_display }}</b><br>
+                    </div>  
+                    <div class="banner-footer">
+                        Дата создания: {{ response.created_at|date:"d.m.Y / H:i" }}<br>
+                    </div>
+            </div>
+            {% empty %}
+            <p style="font-size: 20px;"><b>Нет откликов, соответствующих критериям поиска.</b></p>
+        {% endfor %}
+    </div>
+        
+{% endblock %}

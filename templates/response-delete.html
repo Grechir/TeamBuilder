@@ -1,0 +1,12 @@
+{% extends 'flatpages/default.html' %}
+
+{% block content %}
+<h1>Удаление отклика</h1>
+<hr>
+<form action="" method="post">  <!-- Здесь post - это не название модели, это пост запрос-->
+    {% csrf_token %}
+    <p>Вы действительно хотите удалить этот отклик?</p>
+    <input type="submit" value="Удалить" />
+    <button type="button" onclick="window.history.back()">Отмена</button>
+</form>
+{% endblock content %}
