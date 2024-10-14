@@ -7,7 +7,7 @@ from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 
 from app.forms import ResponseSearchForm
-from app.models import Post, UserResponse, Author
+from app.models import Post, UserResponse, Author, New
 
 
 # ------------------------- Posts -------------------------
@@ -184,3 +184,9 @@ class ResponseDelete(LoginRequiredMixin, DeleteView):
     template_name = 'response-delete.html'
     success_url = reverse_lazy('response-list')
 
+# -------------------------- News --------------------------
+
+class NewsList(ListView):
+    model = New
+    template_name = 'news.html'
+    context_object_name = 'responses'

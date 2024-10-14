@@ -76,3 +76,17 @@ class UserResponse(models.Model):
     def __str__(self):
         return (f'Response by {self.author.username} to {self.post.title}\n'
                 f'Status: {self.status}')
+
+
+class New(models.Model):
+
+    # TYPE = ( (), (), )  наподобие модели post
+
+    title = models.CharField(max_length=48)
+    author = models.ForeignKey(User, on_delete=models.CASCADE)
+    content = CKEditor5Field('Описание', config_name='default')
+    created_at = models.DateTimeField(auto_now_add=True)
+    # category = models.CharField(max_length=16, choices=TYPE, default='#')
+
+    def __str__(self):
+        return self.title
