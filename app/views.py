@@ -79,7 +79,7 @@ class PostDelete(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
 
 
 # ----------------------- Responses -----------------------
-class ResponseList(ListView):
+class ResponseList(LoginRequiredMixin, ListView):
     model = UserResponse
     template_name = 'responses.html'
     context_object_name = 'responses'
